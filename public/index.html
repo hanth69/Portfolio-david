@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>David González — Architekt · Stuttgart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─── */
+:root{
+  --w:#ffffff; --off:#f5f5f3; --g50:#efefed; --g100:#e4e4e1;
+  --g200:#cacac6; --g400:#96968f; --g600:#5c5c55; --g700:#3a3a34; --ink:#111110;
+  --or:#e85d20; --or2:#c44a14;
+  --nav:56px; --page:1280px;
+  --sans:'Instrument Sans',sans-serif;
+  --disp:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--sans);background:var(--w);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+svg{display:block;}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:var(--nav);background:var(--w);
+  border-bottom:1px solid var(--g100);
+  display:flex;align-items:center;padding:0 40px;gap:0;
+}
+.nav-logo{
+  font-family:var(--disp);font-weight:800;font-size:.88rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-right:auto;
+}
+.nav-logo em{color:var(--or);font-style:normal;}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--g400);transition:color .18s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-sep{width:1px;height:20px;background:var(--g100);margin:0 8px;}
+.lang-sw{display:flex;align-items:center;gap:3px;background:var(--g50);border-radius:3px;padding:3px;}
+.lbtn{
+  font-family:var(--disp);font-size:.65rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 10px;border-radius:2px;color:var(--g400);transition:all .18s;
+}
+.lbtn.on{background:var(--or);color:var(--w);}
+
+/* ─── WRAP ─── */
+.wrap{max-width:var(--page);margin:0 auto;padding:0 40px;}
+
+/* ─── BTNS ─── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--disp);font-size:.7rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:12px 22px;
+  transition:all .2s;
+}
+.btn-fill{background:var(--or);color:var(--w);}
+.btn-fill:hover{background:var(--or2);transform:translateY(-1px);}
+.btn-ghost{border:1.5px solid var(--g200);color:var(--g700);}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink);}
+
+/* ─── HERO ─── */
+/* 1. Photo wrap */
+#hero{padding-top:var(--nav);padding-bottom:0;border-bottom:none;}
+.hero-photo-wrap{
+  position:relative;width:100%;
+  height:calc(100vh - var(--nav));min-height:500px;
+  overflow:hidden;background:#111110;
+}
+.hero-photo-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:#111110;
+}
+.hero-photo-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  display:block;filter:grayscale(100%);
+}
+
+/* 2. Hover message — subtle, text only */
+.hero-hover-msg{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:52px 64px;
+  opacity:0;transition:opacity .5s ease;
+  pointer-events:none;
+  background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 60%);
+}
+.hero-photo-wrap:hover .hero-hover-msg{opacity:1;}
+.hhm-line{
+  font-family:var(--sans);font-size:1.1rem;font-weight:400;
+  color:rgba(255,255,255,.78);line-height:1.55;letter-spacing:.01em;
+}
+.hhm-name{
+  font-family:var(--disp);font-size:1.5rem;font-weight:400;
+  color:rgba(255,255,255,.85);margin-top:2px;
+}
+.hhm-name strong{font-weight:800;color:#fff;}
+
+/* 3. Scroll card */
+.hero-card{
+  background:var(--w);
+  transform:translateY(-20px);
+  opacity:0;
+  transition:transform .65s cubic-bezier(.4,0,.2,1), opacity .6s ease;
+  pointer-events:none;
+}
+.hero-card.visible{
+  transform:translateY(0);opacity:1;pointer-events:all;
+}
+.hero-card-inner{
+  max-width:var(--page);margin:0 auto;
+  padding:72px 40px 64px;
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:80px;
+  align-items:start;
+}
+
+/* LEFT */
+.hc-left{}
+.hc-kicker{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:22px;
+}
+.hc-kicker-line{width:28px;height:2px;background:var(--or);flex-shrink:0;}
+.hc-kicker-txt{
+  font-size:.65rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or);
+}
+.hc-name{
+  font-family:var(--disp);line-height:.96;letter-spacing:-.02em;
+  margin-bottom:24px;
+}
+.hc-first{
+  font-size:clamp(2.8rem,5.5vw,4.8rem);
+  font-weight:800;color:var(--ink);display:block;
+}
+.hc-last{
+  font-size:clamp(2.8rem,5.5vw,4.8rem);
+  font-weight:400;color:var(--g400);display:block;
+}
+.hc-desc{
+  font-size:.93rem;line-height:1.82;color:var(--g600);
+  max-width:480px;margin-bottom:32px;
+}
+.hc-actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* RIGHT */
+.hc-right{
+  background:var(--off);
+  border:1px solid var(--g100);
+}
+.hc-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--g100);
+}
+.hc-stat{
+  background:var(--off);padding:22px 20px;
+}
+.hc-stat-n{
+  font-family:var(--disp);font-size:1.75rem;font-weight:800;
+  color:var(--ink);line-height:1;margin-bottom:4px;
+}
+.hc-stat-n.or{color:var(--or);}
+.hc-stat-l{
+  font-size:.58rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--g400);
+}
+.hc-awards{
+  border-top:1px solid var(--g100);
+  padding:16px 20px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.hc-award{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:.75rem;color:var(--g600);line-height:1.45;
+}
+.hc-award svg{flex-shrink:0;margin-top:1px;}
+.hc-award strong{color:var(--ink);}
+.hc-langs{
+  border-top:1px solid var(--g100);
+  display:flex;flex-wrap:wrap;padding:12px 14px;gap:6px;
+}
+.hc-lang{
+  font-size:.6rem;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;padding:4px 10px;
+  border:1px solid var(--g200);color:var(--g600);
+}
+.hc-lang.nat{border-color:var(--or);color:var(--or);}
+
+/* Scroll hint */
+.hero-scroll-hint{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  animation:bobble 2.2s ease-in-out infinite;
+}
+@keyframes bobble{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(7px);}}
+/* ─── SEC CHROME ─── */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:36px;padding-bottom:14px;border-bottom:1px solid var(--g100);}
+.sec-eye{font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:5px;}
+.sec-h2{font-family:var(--disp);font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:800;letter-spacing:-.01em;color:var(--ink);}
+.sec-count{font-family:var(--disp);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);}
+
+/* ─── PROJECTS ─── */
+#projekte{padding:80px 0;}
+
+.proj-block{margin-bottom:2px;}
+
+/* HEADER ROW */
+.proj-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:var(--g50);border:1px solid var(--g100);
+  border-bottom:none;
+}
+.proj-header-left{display:flex;align-items:center;gap:14px;}
+.proj-num{font-family:var(--disp);font-size:.7rem;font-weight:800;color:var(--g400);letter-spacing:.1em;}
+.proj-htitle{font-family:var(--disp);font-size:.92rem;font-weight:700;color:var(--ink);}
+.proj-hloc{font-size:.7rem;color:var(--g400);margin-left:4px;}
+.proj-header-right{display:flex;align-items:center;gap:8px;}
+.tag{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--g200);color:var(--g600);}
+.tag-or{background:var(--or);color:var(--w);border-color:var(--or);}
+.tag-ink{background:var(--ink);color:var(--w);border-color:var(--ink);}
+
+/* IMAGE GRID: 1 big + 3 small */
+.proj-imgs{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  grid-template-rows:auto auto;
+  gap:2px;
+  border:1px solid var(--g100);
+  border-top:none;
+}
+.proj-main-img{grid-row:1/3;}
+.proj-smalls{display:grid;grid-template-rows:1fr 1fr 1fr;gap:2px;}
+
+/* Each image slot */
+.img-slot{
+  position:relative;overflow:hidden;
+  background:var(--g100);cursor:pointer;
+}
+.proj-main-img .img-slot{height:420px;}
+.proj-smalls .img-slot{height:138px;}
+
+/* Tonal backgrounds per project */
+.tone-1a{background:#dbd8d2;} .tone-1b{background:#ccc9c3;} .tone-1c{background:#c3c0ba;} .tone-1d{background:#b9b6b0;}
+.tone-2a{background:#cfd3d8;} .tone-2b{background:#c1c6cc;} .tone-2c{background:#b5bbc2;} .tone-2d{background:#a9b0b8;}
+.tone-3a{background:#cdd2cd;} .tone-3b{background:#bfc5c0;} .tone-3c{background:#b3b9b4;} .tone-3d{background:#a8ada8;}
+.tone-4a{background:#d2cdd2;} .tone-4b{background:#c5bfc5;} .tone-4c{background:#b8b3b8;} .tone-4d{background:#aca7ac;}
+.tone-5a{background:#d2cdd7;} .tone-5b{background:#c6c1cc;} .tone-5c{background:#bab5c2;} .tone-5d{background:#aeaaB8;}
+.tone-6a{background:#cdd2ce;} .tone-6b{background:#c0c6c1;} .tone-6c{background:#b4bab5;} .tone-6d{background:#a8ada9;}
+
+/* SVG placeholder */
+.img-ph{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.img-ph svg{opacity:.18;}
+
+/* Hover caption */
+.img-cap{
+  position:absolute;inset:0;
+  background:rgba(17,17,16,.82);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:18px;
+  opacity:0;transition:opacity .25s;
+}
+.img-slot:hover .img-cap{opacity:1;}
+.cap-label{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:5px;}
+.cap-txt{font-size:.78rem;line-height:1.55;color:rgba(255,255,255,.88);}
+
+/* Project info bar */
+.proj-info{
+  display:grid;grid-template-columns:1fr 1fr 1fr auto;
+  gap:0;border:1px solid var(--g100);border-top:none;
+}
+.pi-col{padding:18px 20px;border-right:1px solid var(--g100);}
+.pi-col:last-child{border-right:none;display:flex;align-items:center;justify-content:center;padding:14px 20px;}
+.pi-lbl{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);margin-bottom:4px;}
+.pi-val{font-size:.8rem;color:var(--ink);line-height:1.5;}
+.pi-val a{color:var(--or);}
+.proj-arrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--or);white-space:nowrap;transition:gap .2s;
+}
+.proj-arrow:hover{gap:10px;}
+
+/* ─── EXPERIENCE ─── */
+#erfahrung{padding:80px 0;background:var(--off);}
+.timeline{display:flex;flex-direction:column;gap:2px;}
+.tl-row{
+  display:grid;grid-template-columns:140px 240px 1fr 160px;
+  background:var(--w);border:1px solid var(--g100);
+  transition:border-color .2s;
+}
+.tl-row:hover{border-color:var(--or);}
+.tl-c{padding:24px 22px;border-right:1px solid var(--g100);}
+.tl-c:last-child{border-right:none;}
+.tl-year{font-family:var(--disp);font-size:1rem;font-weight:800;color:var(--ink);margin-bottom:1px;}
+.tl-period{font-size:.62rem;color:var(--g400);font-weight:500;}
+.tl-role{font-family:var(--disp);font-size:.92rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.tl-co{font-size:.72rem;font-weight:600;color:var(--or);margin-bottom:10px;}
+.tl-desc{font-size:.78rem;line-height:1.72;color:var(--g600);}
+.tl-tags{display:flex;flex-direction:column;gap:6px;align-items:flex-start;justify-content:center;}
+
+/* ─── EDUCATION ─── */
+#bildung{padding:80px 0;}
+.edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.edu-card{
+  background:var(--w);border:1px solid var(--g100);
+  padding:28px 24px 26px;transition:border-color .2s;
+}
+.edu-card:hover{border-color:var(--or);}
+.edu-icon{margin-bottom:20px;color:var(--ink);}
+.edu-type{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--or);margin-bottom:8px;}
+.edu-deg{font-family:var(--disp);font-size:1rem;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.2;}
+.edu-uni{font-size:.78rem;font-weight:600;color:var(--g600);margin-bottom:12px;}
+.edu-years{
+  display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 10px;
+  background:var(--g50);border:1px solid var(--g100);color:var(--g600);
+  margin-bottom:12px;
+}
+.edu-desc{font-size:.78rem;line-height:1.72;color:var(--g600);}
+.edu-in-progress{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 10px;background:var(--or);color:var(--w);margin-top:14px;
+}
+.edu-dot{width:6px;height:6px;border-radius:50%;background:var(--w);animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ─── SKILLS ─── */
+#kompetenzen{padding:80px 0;background:var(--off);}
+.sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.sk-cell{
+  background:var(--w);border:1px solid var(--g100);padding:24px 20px;
+  transition:border-color .2s,background .2s;
+}
+.sk-cell:hover{border-color:var(--or);background:var(--off);}
+.sk-icon{margin-bottom:14px;color:var(--ink);}
+.sk-name{font-family:var(--disp);font-size:.9rem;font-weight:800;color:var(--ink);margin-bottom:6px;}
+.sk-desc{font-size:.74rem;line-height:1.68;color:var(--g600);}
+.sk-bar{height:2px;background:var(--g100);margin-top:14px;}
+.sk-fill{height:100%;background:var(--or);transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0;}
+
+/* ─── CONTACT ─── */
+#kontakt{padding:80px 0;background:var(--ink);}
+#kontakt .sec-eye{color:var(--or);}
+#kontakt .sec-h2{color:var(--w);}
+#kontakt .sec-head{border-color:rgba(255,255,255,.08);}
+#kontakt .sec-count{color:rgba(255,255,255,.25);}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.ct-panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:32px;}
+.ct-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.ct-item:last-of-type{border-bottom:none;}
+.ct-ico{flex-shrink:0;color:var(--or);margin-top:1px;}
+.ct-lbl{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:3px;}
+.ct-val{font-size:.82rem;color:rgba(255,255,255,.82);}
+.ct-val a{color:var(--or);}
+.ct-mkt{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;}
+.ct-m{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);}
+.ct-m.on{background:var(--or);color:var(--w);border-color:var(--or);}
+.ct-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+.fi{font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:10px 18px;background:var(--or);color:var(--w);text-transform:uppercase;transition:background .2s;}
+.fi:hover{background:var(--or2);}
+.gh{font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:10px 18px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);text-transform:uppercase;transition:all .2s;}
+.gh:hover{border-color:rgba(255,255,255,.5);color:var(--w);}
+.fl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:6px 0;border-bottom:1px solid var(--g200);color:var(--g400);margin-bottom:16px;display:block;}
+.fi2{display:block;width:100%;padding:11px 0;background:var(--or);color:var(--w);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;transition:background .2s;margin-top:18px;}
+.fi2:hover{background:var(--or2);}
+input,textarea{
+  display:block;width:100%;padding:9px 0;margin-bottom:18px;
+  background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.15);
+  font-family:var(--sans);font-size:.82rem;color:rgba(255,255,255,.85);outline:none;
+  transition:border-color .2s;
+}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2);}
+input:focus,textarea:focus{border-color:var(--or);}
+textarea{resize:vertical;min-height:85px;}
+
+/* ─── FOOTER ─── */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.08);padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
+.fl2{font-size:.65rem;color:rgba(255,255,255,.28);letter-spacing:.06em;}
+.fl2 span{color:var(--or);}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.fu{opacity:0;animation:fadeUp .65s ease forwards;}
+.fu1{animation-delay:.05s;}.fu2{animation-delay:.15s;}.fu3{animation-delay:.27s;}.fu4{animation-delay:.38s;}
+
+/* ─── LIGHTBOX ─── */
+#lb{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(10,10,10,.96);
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+#lb.open{display:flex;}
+#lb-img{
+  max-width:90vw;max-height:72vh;
+  object-fit:contain;display:block;
+  /* placeholder when no real img yet */
+}
+#lb-img-ph{
+  max-width:90vw;width:600px;max-height:72vh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--g700);
+}
+#lb-img-ph svg{opacity:.18;}
+#lb-caption{
+  margin-top:20px;text-align:center;max-width:680px;
+}
+#lb-cap-label{
+  font-size:.6rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--or);margin-bottom:6px;
+}
+#lb-cap-txt{font-size:.85rem;line-height:1.65;color:rgba(255,255,255,.78);}
+#lb-close{
+  position:fixed;top:20px;right:24px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.6);cursor:pointer;transition:color .2s;
+  font-size:1.4rem;font-weight:300;
+}
+#lb-close:hover{color:var(--or);}
+#lb-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  display:flex;justify-content:space-between;
+  width:calc(100% - 40px);left:20px;pointer-events:none;
+}
+.lb-arr{
+  pointer-events:all;cursor:pointer;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);
+  transition:all .2s;background:rgba(0,0,0,.4);
+}
+.lb-arr:hover{border-color:var(--or);color:var(--or);}
+#lb-counter{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  font-size:.62rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.3);
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1100px){.sk-grid{grid-template-columns:repeat(2,1fr);}.hero-card-inner{grid-template-columns:1fr;gap:40px;padding:56px 32px 48px;}}
+@media(max-width:960px){
+  .proj-imgs{grid-template-columns:1fr;}.proj-main-img{grid-row:auto;}
+  .proj-smalls{grid-template-rows:auto;grid-template-columns:repeat(3,1fr);}
+  .proj-smalls .img-slot{height:120px;}
+  .proj-info{grid-template-columns:1fr 1fr;}
+  .tl-row{grid-template-columns:1fr;}.tl-c{border-right:none;border-bottom:1px solid var(--g100);}
+  .edu-grid{grid-template-columns:1fr;}.ct-grid{grid-template-columns:1fr;}
+}
+@media(max-width:680px){
+  nav{padding:0 18px;}.nav-links{display:none;}.wrap{padding:0 18px;}
+  .proj-smalls{grid-template-columns:1fr;}.proj-smalls .img-slot{height:110px;}
+  .proj-info{grid-template-columns:1fr;}.sk-grid{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;gap:6px;padding:14px 18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-logo">David <em>González</em></div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#projekte" data-de="Projekte" data-es="Proyectos">Projekte</a></li>
+    <li><a href="#erfahrung" data-de="Erfahrung" data-es="Experiencia">Erfahrung</a></li>
+    <li><a href="#bildung" data-de="Bildung" data-es="Formación">Bildung</a></li>
+    <li><a href="#kompetenzen" data-de="Kompetenzen" data-es="Competencias">Kompetenzen</a></li>
+    <li><a href="#kontakt" data-de="Kontakt" data-es="Contacto">Kontakt</a></li>
+  </ul>
+  <div class="nav-sep"></div>
+  <div class="lang-sw">
+    <button class="lbtn on" id="btnDE" onclick="setLang('de')">DE</button>
+    <button class="lbtn" id="btnES" onclick="setLang('es')">ES</button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+
+  <!-- 1. FOTO A PANTALLA COMPLETA -->
+  <div class="hero-photo-wrap" id="heroWrap">
+    <!-- FOTO: reemplazar por <img class="hero-photo-img" src="foto-david.jpg" alt="David González"> -->
+    <img class="hero-photo-img" src="foto-landing.jpg" alt="David González">
+
+    <!-- 2. HOVER OVERLAY — sutil, solo al pasar el mouse -->
+    <div class="hero-hover-msg" id="heroHoverMsg">
+      <div class="hhm-line" data-de="Hallo," data-es="Hola,">Hola,</div>
+      <div class="hhm-line" data-de="Willkommen in meinem Profil" data-es="Bienvenido a mi Perfil Profesional">Bienvenido a mi Perfil Profesional</div>
+      <div class="hhm-line hhm-name">
+        <span data-de="Ich bin" data-es="soy">soy</span>
+        &nbsp;<strong>David González</strong>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="hero-scroll-hint">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"><path d="M9 3v12M5 11l4 4 4-4"/></svg>
+    </div>
+  </div>
+
+  <!-- 3. FICHA BLANCA — aparece al hacer scroll -->
+  <div class="hero-card" id="heroCard">
+    <div class="hero-card-inner">
+
+      <!-- LEFT: nombre + descripción + botones -->
+      <div class="hc-left">
+        <div class="hc-kicker">
+          <span class="hc-kicker-line"></span>
+          <span class="hc-kicker-txt" data-de="Architekt · Stuttgart" data-es="Arquitecto · Stuttgart">Arquitecto · Stuttgart</span>
+        </div>
+        <h1 class="hc-name">
+          <span class="hc-first" data-de="David" data-es="David">David</span><br>
+          <span class="hc-last" data-de="González" data-es="González">González</span>
+        </h1>
+        <p class="hc-desc"
+          data-de="Architekt und Projektmanager mit über 8 Jahren internationaler Erfahrung. Spezialist für Krankenhausbau, Hochbau und ökologische Konstruktion — von der Konzeption bis zur Bauleitung. MBA Universitat Politècnica de Catalunya."
+          data-es="Arquitecto y gerente de proyectos con más de 8 años de experiencia internacional. Especialista en hospitales, edificación y construcción ecológica — del concepto a la obra. MBA Universitat Politècnica de Catalunya.">
+          Arquitecto y gerente de proyectos con más de 8 años de experiencia internacional. Especialista en hospitales, edificación y construcción ecológica — del concepto a la obra. MBA Universitat Politècnica de Catalunya.
+        </p>
+        <div class="hc-actions">
+          <a href="#projekte" class="btn btn-fill"
+            data-de="Projekte ansehen" data-es="Ver proyectos">Ver proyectos</a>
+          <a href="#kontakt" class="btn btn-ghost"
+            data-de="Kontakt aufnehmen" data-es="Tomar contacto">Tomar contacto</a>
+          <button onclick="downloadPortfolio()" class="btn btn-ghost"
+            data-de="Portfolio PDF" data-es="Portafolio PDF"
+            style="font-family:inherit;cursor:pointer;">Portfolio PDF</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: stats panel -->
+      <div class="hc-right">
+        <!-- Stats grid -->
+        <div class="hc-stats">
+          <div class="hc-stat">
+            <div class="hc-stat-n or"
+              data-de="2 J." data-es="2 años">2 años</div>
+            <div class="hc-stat-l"
+              data-de="Projektdirektion" data-es="Dirección de Proyectos">Dirección de Proyectos</div>
+          </div>
+          <div class="hc-stat">
+            <div class="hc-stat-n"
+              data-de="6 J." data-es="6 años">6 años</div>
+            <div class="hc-stat-l"
+              data-de="Architekturdesign" data-es="Diseño Arquitectónico">Diseño Arquitectónico</div>
+          </div>
+          <div class="hc-stat">
+            <div class="hc-stat-n or">MBA</div>
+            <div class="hc-stat-l">UPC Barcelona</div>
+          </div>
+          <div class="hc-stat">
+            <div class="hc-stat-n">LP 1–8</div>
+            <div class="hc-stat-l"
+              data-de="Leistungsphasen" data-es="Fases HOAI">Fases HOAI</div>
+          </div>
+        </div>
+
+        <!-- Awards -->
+        <div class="hc-awards">
+          <div class="hc-award">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--or)" stroke-width="1.5"><path d="M6.5 1l1.2 2.8 3.2.4-2.4 2 .7 3.2L6.5 8 3.8 9.4l.7-3.2L2.1 4.2l3.2-.4z"/></svg>
+            <span data-de="<strong>1. Preis</strong> — Klinikum Schloss Winnenden 2021" data-es="<strong>1° Premio</strong> — Klinikum Schloss Winnenden 2021"><strong>1° Premio</strong> — Klinikum Schloss Winnenden 2021</span>
+          </div>
+          <div class="hc-award">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--or)" stroke-width="1.5"><path d="M6.5 1l1.2 2.8 3.2.4-2.4 2 .7 3.2L6.5 8 3.8 9.4l.7-3.2L2.1 4.2l3.2-.4z"/></svg>
+            <span data-de="<strong>2. Preis</strong> — Universitätsklinikum Tübingen 2022" data-es="<strong>2° Premio</strong> — Universitätsklinikum Tübingen 2022"><strong>2° Premio</strong> — Universitätsklinikum Tübingen 2022</span>
+          </div>
+          <div class="hc-award">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--or)" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l1.5 1"/></svg>
+            <span data-de="<strong>Bienal Bogotá</strong> + Azure Social Merit 2019/20" data-es="<strong>Bienal Bogotá</strong> + Azure Social Merit 2019/20"><strong>Bienal Bogotá</strong> + Azure Social Merit 2019/20</span>
+          </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="hc-langs">
+          <span class="hc-lang nat">ES NATIVO</span>
+          <span class="hc-lang">EN C1</span>
+          <span class="hc-lang">IT C1</span>
+          <span class="hc-lang">DE B2</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ PROJEKTE ═══ -->
+<section id="projekte">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eye" data-de="Ausgewählte Arbeiten" data-es="Trabajos Seleccionados">Ausgewählte Arbeiten</div>
+        <h2 class="sec-h2" data-de="Projektportfolio" data-es="Portafolio de Proyectos">Projektportfolio</h2>
+      </div>
+      <span class="sec-count">2018 — 2026 · 06</span>
+    </div>
+
+    <!-- ── PROJECT 01: ZIG ZAG PARK ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">01</span>
+          <span class="proj-htitle" data-de="Zig Zag Park" data-es="Zig Zag Park">Zig Zag Park</span>
+          <span class="proj-hloc" data-de="Bogotá, Kolumbien · 2018" data-es="Bogotá, Colombia · 2018">Bogotá, Kolumbien · 2018</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Soziale Architektur" data-es="Arquitectura Social">Soziale Architektur</span>
+          <span class="tag tag-or" data-de="Bienal + Azure Merit" data-es="Bienal + Azure Merit">Bienal + Azure Merit</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-1a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><rect x="6" y="20" width="40" height="26"/><path d="M6 20L26 6l20 14"/><path d="M18 46V32h16v14"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Übersicht" data-es="Vista general">Übersicht</div>
+              <div class="cap-txt" data-de="Gesamtansicht des fertigen Parks. Transformation eines Abfallplatzes in eine Gemeinschaftsanlage für Kinder im Süden Bogotás." data-es="Vista general del parque terminado. Transformación de un vertedero en una instalación comunitaria para niños en el sur de Bogotá.">Gesamtansicht des fertigen Parks. Transformation eines Abfallplatzes in eine Gemeinschaftsanlage für Kinder im Süden Bogotás.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-1b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="10" width="28" height="18"/><polyline points="2,10 16,2 30,10"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Designkonzept" data-es="Concepto de diseño">Designkonzept</div>
+              <div class="cap-txt" data-de="Schema des Entwurfskonzepts — parametrische Strukturen und Montagesysteme, entwickelt mit CNC-Schnitt." data-es="Esquema del concepto de diseño — estructuras paramétricas y sistemas de montaje desarrollados con corte CNC.">Schema des Entwurfskonzepts — parametrische Strukturen entwickelt mit CNC-Schnitt.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-1c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4v24M7 7l18 18M25 7L7 25"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Gesamtplan" data-es="Planta general">Gesamtplan</div>
+              <div class="cap-txt" data-de="Grundriss des Parks mit Wegführung, Spielzonen und Bepflanzung. Spiralförmige Erschließung als zentrales Gestaltungselement." data-es="Planta del parque con circulación, zonas de juego y vegetación. Circulación en espiral como elemento central de diseño.">Grundriss des Parks mit Wegführung, Spielzonen und Bepflanzung.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-1d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="3" y="8" width="26" height="20"/><path d="M8 8V5m8 3V4m8 4V6"/><line x1="3" y1="15" x2="29" y2="15"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="3D-Modell" data-es="Modelo 3D">3D-Modell</div>
+              <div class="cap-txt" data-de="Physisches Modell des Parklayouts. Gestufte Ebenen folgen der natürlichen Topographie des Hangs und schaffen unterschiedliche Aufenthaltsbereiche." data-es="Maqueta física del parque. Los niveles escalonados siguen la topografía natural de la ladera y crean diferentes zonas de estar.">Physisches Modell. Gestufte Ebenen folgen der natürlichen Topographie des Hangs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Auftraggeber" data-es="Cliente">Auftraggeber</div>
+          <div class="pi-val">Whiteknee / Comunidad</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Auszeichnungen" data-es="Reconocimientos">Auszeichnungen</div>
+          <div class="pi-val" data-de="Architekturbiennale Bogotá 2019<br>Azure Social Goods Merit 2020" data-es="Bienal de Arquitectura Bogotá 2019<br>Azure Social Goods Merit 2020">Architekturbiennale Bogotá 2019<br>Azure Social Goods Merit 2020</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Publikationen" data-es="Publicaciones">Publikationen</div>
+          <div class="pi-val">Archdaily · Azure Magazine</div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver proyecto">
+            Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 02: WINNENDEN ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">02</span>
+          <span class="proj-htitle" data-de="Klinikum Schloss Winnenden" data-es="Klinikum Schloss Winnenden">Klinikum Schloss Winnenden</span>
+          <span class="proj-hloc" data-de="Winnenden, BW · 2021" data-es="Winnenden, BW · 2021">Winnenden, BW · 2021</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Gesundheitsbau · LP 1–4" data-es="Hospital · LP 1–4">Gesundheitsbau · LP 1–4</span>
+          <span class="tag tag-or" data-de="1. Preis" data-es="1er Premio">1. Preis</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-2a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="22" width="44" height="24"/><rect x="12" y="10" width="28" height="12"/><line x1="4" y1="22" x2="48" y2="22"/><line x1="16" y1="30" x2="16" y2="46"/><line x1="26" y1="30" x2="26" y2="46"/><line x1="36" y1="30" x2="36" y2="46"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Hauptfassade" data-es="Fachada principal">Hauptfassade</div>
+              <div class="cap-txt" data-de="Hauptfassade des ökologischen Holzbaus. Kompakte Struktur mit Holzlamellen-Fassade, harmonisch integriert in die parkähnliche Umgebung von Schloss Winnenden." data-es="Fachada principal de la construcción ecológica en madera. Estructura compacta con fachada de lamas de madera, integrada armoniosamente en el entorno parkístico del Schloss Winnenden.">Hauptfassade des ökologischen Holzbaus. Holzlamellen-Fassade, harmonisch integriert in die Parkumgebung.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-2b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="8" width="24" height="20"/><line x1="4" y1="16" x2="28" y2="16"/><line x1="14" y1="8" x2="14" y2="28"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Strukturmodell" data-es="Modelo estructural">Strukturmodell</div>
+              <div class="cap-txt" data-de="Strukturelle Zerlegung des Gebäudes. Klare Trennung von Funktionsbereichen: Psychiatrie, Ambulanz, Tagesklinik und Gemeinschaftsflächen." data-es="Descomposición estructural del edificio. Clara separación de áreas funcionales: psiquiatría, ambulatorio, hospital de día y áreas comunes.">Strukturelle Zerlegung. Klare Trennung von Psychiatrie, Ambulanz und Tagesklinik.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-2c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="6" width="28" height="22"/><line x1="2" y1="14" x2="30" y2="14"/><line x1="10" y1="6" x2="10" y2="28"/><line x1="22" y1="6" x2="22" y2="28"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Stadtplan" data-es="Plano urbano">Stadtplan</div>
+              <div class="cap-txt" data-de="Lageplan des Neubaus auf dem Gelände von Schloss Winnenden. Integration in den historischen Park mit Orientierung zum Grünraum und natürlichen Lichteinfall." data-es="Plano de situación del nuevo edificio en el recinto del Schloss Winnenden. Integración en el parque histórico con orientación al espacio verde e iluminación natural.">Lageplan: Integration in den historischen Park von Schloss Winnenden.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-2d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><path d="M4 28V10l12-8 12 8v18"/><rect x="11" y="16" width="10" height="12"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Fassadenschnitt" data-es="Sección de fachada">Fassadenschnitt</div>
+              <div class="cap-txt" data-de="Detailschnitt der Holzfassade. Doppelt beplanktes Ständerwerk erfüllt alle Anforderungen an Schallschutz, Brandschutz und Bauphysik." data-es="Detalle de sección de la fachada de madera. Entramado de doble tablero cumple todos los requisitos de aislamiento acústico, protección contra incendios y física de la construcción.">Detailschnitt der Holzfassade: Schallschutz, Brandschutz, Bauphysik.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Firma" data-es="Empresa">Firma</div>
+          <div class="pi-val">HSP Hoppe Sommer Planung</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Auszeichnung" data-es="Premio">Auszeichnung</div>
+          <div class="pi-val" data-de="Wettbewerb 1. Preis 2021 · Im Bau" data-es="Concurso 1er Premio 2021 · En construcción">Wettbewerb 1. Preis 2021 · Im Bau</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Publikationen" data-es="Publicaciones">Publikationen</div>
+          <div class="pi-val">competitiononline · WA aktuell</div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver proyecto">Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 03: ORTENAU ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">03</span>
+          <span class="proj-htitle" data-de="Klinikum Ortenau Achern" data-es="Klinikum Ortenau Achern">Klinikum Ortenau Achern</span>
+          <span class="proj-hloc" data-de="Achern, BW · 2022" data-es="Achern, BW · 2022">Achern, BW · 2022</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Gesundheitsbau · LP 1–4" data-es="Hospital · LP 1–4">Gesundheitsbau · LP 1–4</span>
+          <span class="tag tag-ink" data-de="Wettbewerb" data-es="Concurso">Wettbewerb</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-3a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="18" width="44" height="28"/><path d="M4 18h44"/><rect x="14" y="26" width="10" height="10"/><rect x="28" y="26" width="10" height="10"/><line x1="14" y1="36" x2="14" y2="46"/><line x1="24" y1="36" x2="24" y2="46"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Hauptfassade Nacht" data-es="Fachada nocturna">Hauptfassade Nacht</div>
+              <div class="cap-txt" data-de="Abendliche Ansicht der Hauptfassade. Die gleichmäßigen Ziegelverblender-Brüstungen verleihen dem Gebäude eine ruhige, würdevolle Wirkung im Stadtbild von Achern." data-es="Vista nocturna de la fachada principal. Los antepechos de ladrillo uniforme dan al edificio una presencia tranquila y digna en el paisaje urbano de Achern.">Abendliche Ansicht der Hauptfassade. Einheitliche Ziegelverblender-Brüstungen im Stadtbild.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-3b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><polygon points="16,2 30,28 2,28"/><line x1="16" y1="12" x2="16" y2="22"/><circle cx="16" cy="25" r="1" fill="#000"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Stadtplan" data-es="Plano urbano">Stadtplan</div>
+              <div class="cap-txt" data-de="Lageplan des neuen Klinikums im Stadtgefüge von Achern. Neue Erschließungsstraße von der Rückseite des Grundstücks entlastet den bestehenden Schulverkehr." data-es="Plano de situación del nuevo hospital en el tejido urbano de Achern. Nueva vía de acceso desde la parte trasera del solar alivia el tráfico escolar existente.">Lageplan: neue Erschließungsstraße entlastet den bestehenden Schulverkehr.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-3c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="4" width="28" height="24"/><line x1="2" y1="14" x2="30" y2="14"/><line x1="2" y1="20" x2="30" y2="20"/><line x1="10" y1="4" x2="10" y2="28"/><line x1="22" y1="4" x2="22" y2="28"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Grundriss EG" data-es="Planta baja">Grundriss EG</div>
+              <div class="cap-txt" data-de="Erdgeschoss-Grundriss mit Patientenzonen, Allgemein-Diensten und Ambulanz. Gestaffelte Außenbereiche verbinden Klinik, Schule und Wohnquartier." data-es="Planta baja con zonas de pacientes, servicios generales y ambulatorio. Espacios exteriores escalonados conectan clínica, escuela y zona residencial.">Erdgeschoss: Patientenzonen, Ambulanz, gestaffelte Außenbereiche.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-3d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="4" width="12" height="10"/><rect x="4" y="18" width="12" height="10"/><rect x="18" y="4" width="10" height="24"/><line x1="16" y1="9" x2="18" y2="9"/><line x1="16" y1="23" x2="18" y2="23"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Fassadenschnitt" data-es="Sección de fachada">Fassadenschnitt</div>
+              <div class="cap-txt" data-de="Technischer Schnitt durch die Fassade. Vorgefertigte Brüstungselemente ermöglichen dauerhafte, wartungsarme Konstruktion mit starker Kerndämmung." data-es="Sección técnica de la fachada. Elementos de antepecho prefabricados permiten una construcción duradera y de bajo mantenimiento con aislamiento de núcleo reforzado.">Vorgefertigte Brüstungselemente: wartungsarme Konstruktion mit Kerndämmung.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Firma" data-es="Empresa">Firma</div>
+          <div class="pi-val">HSP Hoppe Sommer Planung</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Standort" data-es="Ubicación">Standort</div>
+          <div class="pi-val" data-de="Achern, Ortenaukreis, BW" data-es="Achern, Ortenaukreis, BW">Achern, Ortenaukreis, BW</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Publikationen" data-es="Publicaciones">Publikationen</div>
+          <div class="pi-val"><a href="http://hoppe-sommer-planung.de" target="_blank">hoppe-sommer-planung.de</a></div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver">Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 04: TÜBINGEN ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">04</span>
+          <span class="proj-htitle" data-de="Universitätsklinikum Tübingen NMK" data-es="Universitätsklinikum Tübingen NMK">Universitätsklinikum Tübingen NMK</span>
+          <span class="proj-hloc" data-de="Tübingen, BW · 2022" data-es="Tübingen, BW · 2022">Tübingen, BW · 2022</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Universitätsklinikum · LP 1–4" data-es="Hospital Universitario · LP 1–4">Universitätsklinikum · LP 1–4</span>
+          <span class="tag tag-or" data-de="2. Preis" data-es="2° Premio">2. Preis</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-4a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="16" width="44" height="30"/><line x1="4" y1="28" x2="48" y2="28"/><line x1="4" y1="38" x2="48" y2="38"/><line x1="16" y1="16" x2="16" y2="46"/><line x1="28" y1="16" x2="28" y2="46"/><line x1="36" y1="16" x2="36" y2="46"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Render Fassade" data-es="Render fachada">Render Fassade</div>
+              <div class="cap-txt" data-de="Visualisierung der Holzfassade. Kompakter Baukörper mit sensibler Einbindung in Landschaft und Topographie des Universitätsklinikums Tübingen. Energieeffizienz und natürliche Materialien als Leitthemen." data-es="Visualización de la fachada de madera. Volumen compacto con integración sensible en el paisaje y topografía del hospital universitario de Tübingen. Eficiencia energética y materiales naturales como temas guía.">Visualisierung der Holzfassade. Kompakter Baukörper, sensibel eingebunden in Landschaft und Topographie.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-4b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="6" width="28" height="20"/><line x1="2" y1="6" x2="30" y2="26"/><line x1="30" y1="6" x2="2" y2="26"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="3D Stadtplan" data-es="Plano 3D">3D Stadtplan</div>
+              <div class="cap-txt" data-de="Axonometrische Ansicht des Gesamtgeländes des Universitätsklinikums mit dem neuen NMK-Gebäude im Kontext. Zweiphasige Bauausführung als Planungsgrundlage." data-es="Vista axonométrica del conjunto del hospital universitario con el nuevo edificio NMK en contexto. Ejecución en dos fases como base de planificación.">Axonometrie des Gesamtgeländes. Zweiphasige Bauausführung als Planungsgrundlage.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-4c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><path d="M16 2v28M2 16h28"/><circle cx="16" cy="16" r="10"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Render Innenraum" data-es="Render interior">Render Innenraum</div>
+              <div class="cap-txt" data-de="Innenraumvisualisierung des 1. Obergeschosses. Großzügige Holzdecke, natürliches Licht und offene Verbindungsbereiche schaffen eine heilungsfördernde Atmosphäre." data-es="Visualización interior del 1er piso. Amplio techo de madera, luz natural y áreas de conexión abiertas crean una atmósfera propicia para la curación.">Innenraum EG: Holzdecke, natürliches Licht, heilungsfördernde Atmosphäre.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-4d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><line x1="2" y1="30" x2="30" y2="30"/><polyline points="4,30 4,16 16,4 28,16 28,30"/><rect x="12" y="20" width="8" height="10"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Gesamtplan" data-es="Planta general">Gesamtplan</div>
+              <div class="cap-txt" data-de="Grundriss des neuen NMK mit Herzkatheterlabor, Sonographie, Endoskopie, Labormedizin, Radiologie und Allgemeinpflege. Klare Magistrale als Haupterschließungsachse." data-es="Planta del nuevo NMK con laboratorio de cateterismo cardíaco, sonografía, endoscopia, laboratorio, radiología y cuidados generales. Magistral clara como eje principal de circulación.">NMK-Grundriss: Herzkatheterlabor, Sonographie, Endoskopie, Labormedizin.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Firma" data-es="Empresa">Firma</div>
+          <div class="pi-val">HWP Planungsgesellschaft mbH</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Auszeichnung" data-es="Premio">Auszeichnung</div>
+          <div class="pi-val" data-de="Vermögen und Bau BW · 2. Preis 2022" data-es="Vermögen und Bau BW · 2° Premio 2022">Vermögen und Bau BW · 2. Preis 2022</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Publikationen" data-es="Publicaciones">Publikationen</div>
+          <div class="pi-val">competitiononline · WA aktuell</div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver">Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 05: HANN & TASTE ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">05</span>
+          <span class="proj-htitle" data-de="Hann &amp; Taste — Café &amp; Bar" data-es="Hann &amp; Taste — Café &amp; Bar">Hann &amp; Taste — Café &amp; Bar</span>
+          <span class="proj-hloc" data-de="Sant Gervasi, Barcelona · 2023" data-es="Sant Gervasi, Barcelona · 2023">Sant Gervasi, Barcelona · 2023</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Innenarchitektur · LP 1–8" data-es="Arquitectura de interiores · LP 1–8">Innenarchitektur · LP 1–8</span>
+          <span class="tag tag-or" data-de="Coffee Awards BCN" data-es="Coffee Awards BCN">Coffee Awards BCN</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-5a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="10" width="44" height="34"/><path d="M4 10h44"/><rect x="10" y="20" width="14" height="24"/><line x1="38" y1="20" x2="38" y2="44"/><line x1="30" y1="20" x2="30" y2="44"/><line x1="30" y1="30" x2="44" y2="30"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Innenraum fertiggestellt" data-es="Interior terminado">Innenraum fertiggestellt</div>
+              <div class="cap-txt" data-de="Fertiggestelltes Café in Sant Gervasi, Barcelona. Die restaurierte Holztheke wurde als zentrales Element erhalten. Pflanzen, natürliche Materialien und industrielle Details schaffen eine warme, einladende Atmosphäre." data-es="Café terminado en Sant Gervasi, Barcelona. La barra de madera restaurada se conservó como elemento central. Plantas, materiales naturales y detalles industriales crean una atmósfera cálida y acogedora.">Fertiggestelltes Café. Restaurierte Holztheke als zentrales Element, natürliche Materialien und Pflanzen.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-5b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="3" y="6" width="26" height="20"/><line x1="3" y1="14" x2="29" y2="14"/><line x1="12" y1="6" x2="12" y2="26"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Grundrissplan" data-es="Planta">Grundrissplan</div>
+              <div class="cap-txt" data-de="Verteilungsplan des Lokals mit Bemaßung. Theke, Sitzbereich und Servicebereich optimal auf 75 m² angeordnet. Selbstständige Planung und Ausführung." data-es="Plano de distribución del local con dimensiones. Barra, zona de asientos y área de servicio optimizados en 75 m². Planificación y ejecución independiente.">Verteilungsplan: Theke, Sitzbereich und Servicebereich auf 75 m². Selbstständige Ausführung.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-5c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="8" width="10" height="18"/><rect x="18" y="8" width="10" height="18"/><path d="M14 14h4M14 18h4"/><line x1="4" y1="26" x2="28" y2="26"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Elektrische Installation" data-es="Instalación eléctrica">Elektrische Installation</div>
+              <div class="cap-txt" data-de="Eigenständige elektrische Installation. Vollständige Erneuerung der veralteten Systeme in Zusammenarbeit mit spezialisierten Handwerkern — Teil der LP 1–8 in Eigenregie." data-es="Instalación eléctrica independiente. Renovación completa de los sistemas obsoletos en colaboración con artesanos especializados — parte del LP 1–8 de gestión propia.">Vollständige Erneuerung der elektrischen Anlage. Teil der eigenverantwortlichen LP 1–8.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-5d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><path d="M6 26V10l10-8 10 8v16"/><rect x="10" y="16" width="12" height="10"/><line x1="16" y1="4" x2="16" y2="8"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="3D-Visualisierung" data-es="Visualización 3D">3D-Visualisierung</div>
+              <div class="cap-txt" data-de="Entwurfsvisualisierung des Projekts. González & Duffner — eigenständige Planung, Sanierung und Selbstbau des Lokals. Nominiert als bestes Café bei den Coffee Awards Barcelona 2023." data-es="Visualización de diseño del proyecto. González & Duffner — planificación independiente, rehabilitación y autoconstrucción del local. Nominado como mejor café en los Coffee Awards Barcelona 2023.">Entwurfsvisualisierung. González & Duffner — Selbstbau, nominiert Coffee Awards Barcelona 2023.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Firma" data-es="Empresa">Firma</div>
+          <div class="pi-val">González &amp; Duffner</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Auszeichnung" data-es="Premio">Auszeichnung</div>
+          <div class="pi-val" data-de="Nominierung Coffee Awards Barcelona 2023" data-es="Nominación Coffee Awards Barcelona 2023">Nominierung Coffee Awards Barcelona 2023</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Website" data-es="Sitio web">Website</div>
+          <div class="pi-val"><a href="http://hanntaste.com" target="_blank">hanntaste.com</a></div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver">Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 06: BLOCKBAU ULM ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">06</span>
+          <span class="proj-htitle" data-de="Holz Blockbau Ulm" data-es="Casa Madera Blockbau Ulm">Holz Blockbau Ulm</span>
+          <span class="proj-hloc" data-de="Ulm, BW · 2024" data-es="Ulm, BW · 2024">Ulm, BW · 2024</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Ökologischer Holzbau · LP 1–8" data-es="Construcción ecológica · LP 1–8">Ökologischer Holzbau · LP 1–8</span>
+          <span class="tag tag-ink" data-de="Abgeschlossen" data-es="Completado">Abgeschlossen</span>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-6a">
+            <div class="img-ph"><svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="#000" stroke-width="1"><path d="M8 48V28l18-14 18 14v20"/><path d="M4 28l22-18 22 18"/><line x1="26" y1="14" x2="26" y2="48"/><line x1="14" y1="34" x2="38" y2="34"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Fertiggestelltes Haus" data-es="Casa terminada">Fertiggestelltes Haus</div>
+              <div class="cap-txt" data-de="Fertiggestelltes Blockbauhaus in Ulm. Schwarzwälder Holz — Fichte, Eiche, Lärche und Kiefer. Ökologischer Bau mit patentierter Duffner-Technik für dauerhafte Winddichtigkeit." data-es="Casa blockbau terminada en Ulm. Madera de la Selva Negra — abeto, roble, alerce y pino. Construcción ecológica con técnica patentada Duffner para estanqueidad al viento duradera.">Fertiggestelltes Haus. Schwarzwälder Holz — Fichte, Eiche, Lärche, Kiefer. Patentierte Duffner-Technik.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-6b">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><line x1="2" y1="10" x2="30" y2="10"/><line x1="2" y1="14" x2="30" y2="14"/><line x1="2" y1="18" x2="30" y2="18"/><line x1="2" y1="22" x2="30" y2="22"/><line x1="2" y1="26" x2="30" y2="26"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Erste Blockbalkenlage" data-es="Primera capa de troncos">Erste Blockbalkenlage</div>
+              <div class="cap-txt" data-de="Erste Lage der 38x38 cm Blockstämme. Die kritische Ausrichtungsphase — jedes Element muss perfekt passen, da es sich um vorgefertigte Teile handelt. 7 Stämme pro Stockwerk." data-es="Primera capa de troncos de 38x38 cm. La fase crítica de alineación — cada elemento debe encajar perfectamente por ser piezas prefabricadas. 7 troncos por planta.">Erste Blockbalkenlage. 38×38 cm Stämme, 7 pro Stockwerk. Kritische Ausrichtungsphase.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-6c">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><path d="M16 4L4 28h24z"/><line x1="10" y1="20" x2="22" y2="20"/><line x1="16" y1="12" x2="16" y2="4"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Dachkonstruktion" data-es="Estructura de cubierta">Dachkonstruktion</div>
+              <div class="cap-txt" data-de="Dachstruktur aus heimischem Holz. Winkel werden kontinuierlich korrigiert, Werkzeuge nutzen die Flexibilität des Holzes. Traditionelle und digitale Ansätze kombiniert." data-es="Estructura de cubierta en madera local. Los ángulos se corrigen continuamente aprovechando la flexibilidad de la madera. Enfoques tradicionales y digitales combinados.">Dachkonstruktion aus heimischem Holz. Traditionelle und digitale Ansätze kombiniert.</div>
+            </div>
+          </div>
+          <div class="img-slot tone-6d">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="16" width="10" height="12"/><rect x="18" y="10" width="10" height="18"/><line x1="4" y1="28" x2="28" y2="28"/><line x1="9" y1="16" x2="9" y2="10"/><line x1="4" y1="10" x2="14" y2="10"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Baufortschritt" data-es="Avance de obra">Baufortschritt</div>
+              <div class="cap-txt" data-de="Sichtbarer Tagesfortschritt auf der Baustelle. Holz wird täglich per LKW geliefert, Installation manual oder mit Kranhilfe. Effizienter, leiser, ökologischer Bauprozess." data-es="Avance visible diario en la obra. La madera se entrega diariamente en camión, instalación manual o con grúa. Proceso de construcción eficiente, silencioso y ecológico.">Tagesfortschritt sichtbar. Holz täglich per LKW, Installation manuell oder per Kran.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Firma" data-es="Empresa">Firma</div>
+          <div class="pi-val">Duffner Blockbau</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Methode" data-es="Método">Methode</div>
+          <div class="pi-val" data-de="Duffner-Patent · 38×38 cm Blockstämme" data-es="Patente Duffner · Troncos 38×38 cm">Duffner-Patent · 38×38 cm Blockstämme</div>
+        </div>
+        <div class="pi-col">
+          <div class="pi-lbl" data-de="Website" data-es="Sitio web">Website</div>
+          <div class="pi-val"><a href="http://duffner-blockbau.de" target="_blank">duffner-blockbau.de</a></div>
+        </div>
+        <div class="pi-col">
+          <a href="#" class="proj-arrow" data-de="Ansehen" data-es="Ver">Ansehen <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+</section>
+
+<!-- ═══ PROJEKT 07 ═══ -->
+<section id="projekte" style="padding-top:0;">
+  <div class="wrap">
+    <!-- ── PROJECT 07: BUNDESAGENTUR FÜR ARBEIT MANNHEIM ── -->
+    <div class="proj-block">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <span class="proj-num">07</span>
+          <span class="proj-htitle" data-de="Bundesagentur für Arbeit — Mannheim" data-es="Bundesagentur für Arbeit — Mannheim">Bundesagentur für Arbeit — Mannheim</span>
+          <span class="proj-hloc" data-de="Mannheim, BW · 2024–2026" data-es="Mannheim, BW · 2024–2026">Mannheim, BW · 2024–2026</span>
+        </div>
+        <div class="proj-header-right">
+          <span class="tag" data-de="Projektdirektion · LP 5–8" data-es="Dirección de Proyectos · LP 5–8">Projektdirektion · LP 5–8</span>
+          <span class="tag tag-ink" data-de="BANKWITZ GmbH" data-es="BANKWITZ GmbH">BANKWITZ GmbH</span>
+        </div>
+      </div>
+      <div style="padding:12px 20px;background:var(--g50);border:1px solid var(--g100);border-top:none;border-bottom:none;display:flex;align-items:center;gap:10px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--g400)" stroke-width="1.5" style="flex-shrink:0;"><circle cx="7" cy="7" r="6"/><line x1="7" y1="5" x2="7" y2="5.5"/><line x1="7" y1="7" x2="7" y2="10"/></svg>
+        <span style="font-size:.68rem;color:var(--g400);" data-de="Projektdaten vertraulich — öffentlich zugängliche Außenansichten. Tätigkeit als Projektleiter bei BANKWITZ GmbH." data-es="Datos del proyecto confidenciales — vistas exteriores de acceso público. Actividad como director de proyectos en BANKWITZ GmbH.">Projektdaten vertraulich — öffentlich zugängliche Außenansichten. Tätigkeit als Projektleiter bei BANKWITZ GmbH.</span>
+      </div>
+      <div class="proj-imgs">
+        <div class="proj-main-img">
+          <div class="img-slot tone-2a"
+            data-lb-label-de="Hochschule der Bundesagentur für Arbeit — Mannheim"
+            data-lb-label-es="Escuela Superior de la Bundesagentur für Arbeit — Mannheim"
+            data-lb-txt-de="Projekte: · Austausch von Natursteinplatten an der Fassade · Umrüstung auf LED-Beleuchtung inkl. Austausch der abgehängten Deckenstruktur · Renovierung von 6 Treppenhäusern · Küchenrenovierung (laufend) · Renovierung des IT-Saals mit Erneuerung der Elektroinstallation · Erneuerung der Wasserhydranten · Behebung von Wassereintritten in der Tiefgarage · Installation von Ladestationen für Elektrofahrzeuge"
+            data-lb-txt-es="Proyectos realizados: · Cambio de piezas en piedra natural de fachada · Cambio a luminarias LED con intercambio de estructura de techo colgante · Renovación de 6 escaleras · Renovación de cocinas (en curso) · Renovación de sala IT con intercambio de instalación eléctrica · Renovación de hidrantes de agua · Filtraciones de agua en el garaje · Instalación de zonas de carga para coches eléctricos">
+            <div class="img-ph"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="20" width="48" height="30"/><path d="M4 20L28 6l24 14"/><rect x="10" y="30" width="8" height="10"/><rect x="24" y="30" width="8" height="10"/><rect x="38" y="30" width="8" height="10"/><line x1="10" y1="40" x2="10" y2="50"/><line x1="18" y1="40" x2="18" y2="50"/><line x1="38" y1="40" x2="38" y2="50"/><line x1="46" y1="40" x2="46" y2="50"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Hochschule der Bundesagentur für Arbeit" data-es="Escuela Superior Bundesagentur">Hochschule der Bundesagentur für Arbeit</div>
+              <div class="cap-txt" data-de="Projektleitung LP 5–8. Naturstein, LED, Treppen, Küchen, IT-Saal, Hydranten, Garage, E-Ladesäulen." data-es="Dirección LP 5–8. Piedra natural, LED, escaleras, cocinas, sala IT, hidrantes, garaje, cargadores.">Projektleitung LP 5–8. Naturstein, LED, Treppen, Küchen, IT-Saal, Hydranten, Garage, E-Ladesäulen.</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-smalls">
+          <div class="img-slot tone-2b"
+            data-lb-label-de="Gebäude M3A — Bundesagentur für Arbeit, Mannheim"
+            data-lb-label-es="Edificio M3A — Bundesagentur für Arbeit, Mannheim"
+            data-lb-txt-de="Projekte: · Umrüstung der gesamten Beleuchtung auf LED · Installation der neuen Haupteingangstür für Personal · Installation des neuen Rollgitters am Parkplatzeingang"
+            data-lb-txt-es="Proyectos realizados: · Cambio de toda la iluminación a LED · Instalación de puerta principal para personal · Instalación de la nueva puerta enrollable del parqueadero">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="8" width="28" height="22"/><line x1="2" y1="16" x2="30" y2="16"/><line x1="2" y1="22" x2="30" y2="22"/><line x1="10" y1="8" x2="10" y2="30"/><line x1="22" y1="8" x2="22" y2="30"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label">Gebäude M3A</div>
+              <div class="cap-txt" data-de="LED-Umrüstung · Haupteingangstür · Rollgitter Parkeindgang" data-es="LED · Puerta principal · Puerta enrollable parqueadero">LED-Umrüstung · Haupteingangstür · Rollgitter Parkeingang</div>
+            </div>
+          </div>
+          <div class="img-slot tone-2c"
+            data-lb-label-de="Gebäude M5 — Bundesagentur für Arbeit, Mannheim"
+            data-lb-label-es="Edificio M5 — Bundesagentur für Arbeit, Mannheim"
+            data-lb-txt-de="Projekte: · Fassadensanierung mit Installation von Vogelschutzsystemen (Taubenabwehr) · Küchenrenovierung"
+            data-lb-txt-es="Proyectos realizados: · Saneamiento de fachada con instalación de trampas para aves (control de palomas) · Renovación de cocinas">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="4" y="6" width="24" height="22"/><line x1="4" y1="14" x2="28" y2="14"/><rect x="8" y="18" width="6" height="10"/><rect x="18" y="18" width="6" height="10"/><line x1="4" y1="6" x2="28" y2="6"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label">Gebäude M5</div>
+              <div class="cap-txt" data-de="Fassadensanierung · Vogelschutz · Küchenrenovierung" data-es="Saneamiento fachada · Trampas aves · Cocinas">Fassadensanierung · Vogelschutz · Küchenrenovierung</div>
+            </div>
+          </div>
+          <div class="img-slot tone-2d"
+            data-lb-label-de="Leistungsübersicht — Projektdirektion Mannheim"
+            data-lb-label-es="Resumen de servicios — Dirección de Proyectos Mannheim"
+            data-lb-txt-de="Vollständiger Leistungsumfang: · Projektmanagement · Projektdirektion · Ausschreibung · Vergabe · Kostenkontrolle · Bauüberwachung · Rechnungsprüfung · Angebotsauswertung · Qualitätssicherung"
+            data-lb-txt-es="Alcance completo de servicios: · Gestión de proyectos · Dirección · Licitación · Contratación · Control de costos · Supervisión de obra · Revisión de facturas · Evaluación de ofertas · Control de calidad">
+            <div class="img-ph"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#000" stroke-width="1"><rect x="2" y="4" width="28" height="24"/><line x1="2" y1="10" x2="30" y2="10"/><line x1="8" y1="14" x2="24" y2="14"/><line x1="8" y1="18" x2="20" y2="18"/><line x1="8" y1="22" x2="22" y2="22"/></svg></div>
+            <div class="img-cap">
+              <div class="cap-label" data-de="Leistungsumfang" data-es="Alcance de servicios">Leistungsumfang</div>
+              <div class="cap-txt" data-de="PM · Ausschreibung · Vergabe · Kostenkontrolle · Bauüberwachung · Rechnungsprüfung" data-es="PM · Licitación · Contratación · Control costos · Supervisión · Facturas">PM · Ausschreibung · Vergabe · Kostenkontrolle · Bauüberwachung · Rechnungsprüfung</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--g100);border-top:none;background:var(--off);padding:14px 20px;display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-right:4px;align-self:center;" data-de="Leistungen:" data-es="Servicios:">Leistungen:</span>
+        <span class="tag" data-de="Projektmanagement" data-es="Gestión de proyectos">Projektmanagement</span>
+        <span class="tag" data-de="Projektdirektion" data-es="Dirección de proyectos">Projektdirektion</span>
+        <span class="tag" data-de="Ausschreibung" data-es="Licitación">Ausschreibung</span>
+        <span class="tag" data-de="Vergabe" data-es="Contratación">Vergabe</span>
+        <span class="tag" data-de="Kostenkontrolle" data-es="Control de costos">Kostenkontrolle</span>
+        <span class="tag" data-de="Bauüberwachung" data-es="Supervisión de obra">Bauüberwachung</span>
+        <span class="tag" data-de="Rechnungsprüfung" data-es="Revisión de facturas">Rechnungsprüfung</span>
+        <span class="tag" data-de="Angebotsauswertung" data-es="Evaluación de ofertas">Angebotsauswertung</span>
+      </div>
+      <div class="proj-info">
+        <div class="pi-col"><div class="pi-lbl" data-de="Auftraggeber" data-es="Cliente">Auftraggeber</div><div class="pi-val">Bundesagentur für Arbeit</div></div>
+        <div class="pi-col"><div class="pi-lbl" data-de="Standort" data-es="Ubicación">Standort</div><div class="pi-val" data-de="Mannheim, Baden-Württemberg" data-es="Mannheim, Baden-Württemberg">Mannheim, Baden-Württemberg</div></div>
+        <div class="pi-col"><div class="pi-lbl" data-de="Ausführende Firma" data-es="Empresa ejecutora">Ausführende Firma</div><div class="pi-val">BANKWITZ GmbH</div></div>
+        <div class="pi-col"><div class="pi-lbl" data-de="Zeitraum" data-es="Período">Zeitraum</div><div class="pi-val">2024 — 2026</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ERFAHRUNG ═══ -->
+<section id="erfahrung">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eye" data-de="Beruflicher Werdegang" data-es="Trayectoria Profesional">Beruflicher Werdegang</div>
+        <h2 class="sec-h2" data-de="Berufserfahrung" data-es="Experiencia Laboral">Berufserfahrung</h2>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-c"><div class="tl-year">2024</div><div class="tl-period" data-de="Apr — heute" data-es="Abr — hoy">Apr — heute</div></div>
+        <div class="tl-c">
+          <div class="tl-role" data-de="Architekt / Projektmanager" data-es="Arquitecto / Gerente de Proyectos">Architekt / Projektmanager</div>
+          <div class="tl-co">BANKWITZ GmbH — Kirchheim u.T.</div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-desc" data-de="Leitung von Hochbauprojekten — vollständige Verantwortung für Budget, Terminplanung und Qualitätssicherung. Führung multidisziplinärer Teams. Schnittstellenmanagement zwischen Bauleitung, Fachplanern und Auftraggebern." data-es="Dirección de proyectos de edificación — responsabilidad completa de presupuesto, planificación de plazos y control de calidad. Liderazgo de equipos multidisciplinarios. Gestión de interfaces entre obra, especialistas y clientes.">
+            Leitung von Hochbauprojekten — vollständige Verantwortung für Budget, Terminplanung und Qualitätssicherung. Führung multidisziplinärer Teams.
+          </div>
+        </div>
+        <div class="tl-c"><div class="tl-tags">
+          <span class="tag" data-de="LP 5–8" data-es="LP 5–8">LP 5–8</span>
+          <span class="tag" data-de="Bauleitung" data-es="Dirección de obra">Bauleitung</span>
+          <span class="tag" data-de="Budget" data-es="Presupuesto">Budget</span>
+        </div></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-c"><div class="tl-year">2022</div><div class="tl-period" data-de="Jan — Aug" data-es="Ene — Ago">Jan — Aug</div></div>
+        <div class="tl-c">
+          <div class="tl-role" data-de="Architekt — Projekte &amp; Wettbewerbe" data-es="Arquitecto — Proyectos y Concursos">Architekt — Projekte &amp; Wettbewerbe</div>
+          <div class="tl-co">HWP Planungsgesellschaft mbH — Stuttgart</div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-desc" data-de="Entwicklung architektonischer Konzepte für internationale Wettbewerbe. Universitätsklinikum Tübingen NMK: 2. Preis. Koordination zwischen Konzept und Ausführungsplanung im Gesundheitsbereich." data-es="Desarrollo de conceptos arquitectónicos para concursos internacionales. Universitätsklinikum Tübingen NMK: 2° Premio. Coordinación entre concepto y planificación de ejecución en el sector sanitario.">
+            Konzeptentwicklung für internationale Wettbewerbe. Universitätsklinikum Tübingen NMK: 2. Preis.
+          </div>
+        </div>
+        <div class="tl-c"><div class="tl-tags">
+          <span class="tag tag-or" data-de="2. Preis Tübingen" data-es="2° Premio Tübingen">2. Preis Tübingen</span>
+          <span class="tag">LP 1–3</span>
+        </div></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-c"><div class="tl-year">2020</div><div class="tl-period" data-de="Aug — Jan 22" data-es="Ago — Ene 22">Aug — Jan 22</div></div>
+        <div class="tl-c">
+          <div class="tl-role" data-de="Architekt — Projekte &amp; Wettbewerbe" data-es="Arquitecto — Proyectos y Concursos">Architekt — Projekte &amp; Wettbewerbe</div>
+          <div class="tl-co">HSP Hoppe Sommer Planung — Stuttgart</div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-desc" data-de="Planung von Krankenhausbauten LP 1–4. Klinikum Schloss Winnenden: 1. Preis — ökologischer Holzbau, Psychiatrie. Klinikum Ortenau Achern: Wettbewerbsteilnahme. Technische Überwachung und Kostenkontrolle." data-es="Planificación de hospitales LP 1–4. Klinikum Schloss Winnenden: 1er Premio — construcción ecológica en madera, psiquiatría. Klinikum Ortenau Achern: participación en concurso. Supervisión técnica y control de costos.">
+            Planung von Krankenhausbauten LP 1–4. Klinikum Winnenden: 1. Preis. Klinikum Ortenau Achern.
+          </div>
+        </div>
+        <div class="tl-c"><div class="tl-tags">
+          <span class="tag tag-or" data-de="1. Preis Winnenden" data-es="1° Premio Winnenden">1. Preis Winnenden</span>
+          <span class="tag">LP 1–4</span>
+          <span class="tag" data-de="Krankenhaus" data-es="Hospital">Krankenhaus</span>
+        </div></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-c"><div class="tl-year">2016</div><div class="tl-period" data-de="Mrz — Aug 17" data-es="Mar — Ago 17">Mrz — Aug 17</div></div>
+        <div class="tl-c">
+          <div class="tl-role" data-de="Architekt — Planung &amp; Design" data-es="Arquitecto — Planeación y Diseño">Architekt — Planung &amp; Design</div>
+          <div class="tl-co">UAESP, Alcaldía de Bogotá — Colombia</div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-desc" data-de="Planung und Gestaltung von Industrie- und Logistikzentren. Erstellung von Betriebshandbüchern für Sortier- und Verwertungsstationen (ECAs). Öffentlicher Sektor, Stadtplanung Bogotá." data-es="Planificación y diseño de centros industriales y logísticos. Creación de manuales operativos para estaciones de clasificación y aprovechamiento (ECAs). Sector público, urbanismo Bogotá.">
+            Planung von Industrie- und Logistikzentren. Betriebshandbücher für Sortieranlagen (ECAs). Öffentlicher Sektor Bogotá.
+          </div>
+        </div>
+        <div class="tl-c"><div class="tl-tags">
+          <span class="tag" data-de="Industriebau" data-es="Industrial">Industriebau</span>
+          <span class="tag" data-de="Öffentlich" data-es="Sector público">Öffentlich</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BILDUNG ═══ -->
+<section id="bildung">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eye" data-de="Akademische Ausbildung" data-es="Formación Académica">Akademische Ausbildung</div>
+        <h2 class="sec-h2" data-de="Bildung &amp; Weiterbildung" data-es="Educación &amp; Formación">Bildung &amp; Weiterbildung</h2>
+      </div>
+    </div>
+    <div class="edu-grid">
+      <!-- Card 1: Arquitectura -->
+      <div class="edu-card">
+        <div class="edu-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 28V14L16 4l12 10v14"/><rect x="11" y="18" width="10" height="10"/>
+            <line x1="11" y1="18" x2="21" y2="18"/><line x1="16" y1="4" x2="16" y2="10"/>
+          </svg>
+        </div>
+        <div class="edu-type" data-de="Hochschulabschluss" data-es="Título universitario">Hochschulabschluss</div>
+        <div class="edu-deg" data-de="Diplom-Architekt" data-es="Arquitecto">Diplom-Architekt</div>
+        <div class="edu-uni" data-de="Universidad Piloto de Colombia — Bogotá" data-es="Universidad Piloto de Colombia — Bogotá">Universidad Piloto de Colombia — Bogotá</div>
+        <div class="edu-years">2011 — 2016</div>
+        <div class="edu-desc" data-de="Architekturstudium mit Schwerpunkt auf Entwurf, Konstruktion und urbanem Kontext. Abschlussarbeit: Zig Zag Park — Transformation eines Abfallplatzes in eine Gemeinschaftsanlage, Arqutekturbiennale Bogotá 2019." data-es="Estudios de arquitectura con énfasis en diseño, construcción y contexto urbano. Proyecto de grado: Zig Zag Park — transformación de un vertedero en equipamiento comunitario, Bienal de Arquitectura Bogotá 2019.">
+          Entwurf, Konstruktion und urbaner Kontext. Abschlussarbeit: Zig Zag Park — Bienal Bogotá 2019.
+        </div>
+      </div>
+      <!-- Card 2: MBA -->
+      <div class="edu-card">
+        <div class="edu-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="16" cy="14" r="8"/><path d="M8 14v10l8 4 8-4V14"/>
+            <line x1="16" y1="6" x2="16" y2="22"/><line x1="8" y1="10" x2="24" y2="10"/>
+          </svg>
+        </div>
+        <div class="edu-type">MBA</div>
+        <div class="edu-deg" data-de="Master in Betriebswirtschaft" data-es="Máster en Administración de Empresas">Master in Betriebswirtschaft</div>
+        <div class="edu-uni" data-de="Universitat Politècnica de Catalunya — Barcelona" data-es="Universitat Politècnica de Catalunya — Barcelona">Universitat Politècnica de Catalunya — Barcelona</div>
+        <div class="edu-years">2017 — 2019</div>
+        <div class="edu-desc" data-de="Projektmanagement, Finanzen, Führung internationaler Teams und strategische Planung. Verbindet technische Architekturausbildung mit kaufmännischer Führungskompetenz — differenzierendes Merkmal im deutschen Arbeitsmarkt." data-es="Gestión de proyectos, finanzas, liderazgo de equipos internacionales y planificación estratégica. Combina la formación técnica en arquitectura con competencias gerenciales — elemento diferenciador en el mercado laboral alemán.">
+          Projektmanagement, Finanzen, internationale Teamführung. Differenzierendes Merkmal im deutschen Arbeitsmarkt.
+        </div>
+      </div>
+      <!-- Card 3: Anthropic -->
+      <div class="edu-card">
+        <div class="edu-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="4" y="4" width="24" height="18" rx="2"/>
+            <path d="M4 14h24"/><circle cx="10" cy="9" r="2"/><circle cx="16" cy="9" r="2"/><circle cx="22" cy="9" r="2"/>
+            <path d="M10 22v6M22 22v6M10 28h12"/>
+            <path d="M13 17l2 3 2-3 2 3"/>
+          </svg>
+        </div>
+        <div class="edu-type" data-de="Aktuelle Weiterbildung" data-es="Formación en curso">Aktuelle Weiterbildung</div>
+        <div class="edu-deg" data-de="Prompt Engineering &amp; KI-Anwendung" data-es="Ingeniería de Prompts &amp; Aplicación de IA">Prompt Engineering &amp; KI-Anwendung</div>
+        <div class="edu-uni">Anthropic</div>
+        <div class="edu-years">2025 — 2026</div>
+        <div class="edu-desc" data-de="Fortgeschrittene Anwendung von KI-Werkzeugen im Entwurfs- und Projektmanagementprozess. Prompt Engineering, KI-gestützte Workflows und digitale Transformation in der Architektur." data-es="Aplicación avanzada de herramientas de IA en los procesos de diseño y gestión de proyectos. Ingeniería de prompts, flujos de trabajo asistidos por IA y transformación digital en arquitectura.">
+          KI-Werkzeuge im Entwurfs- und PM-Prozess. Prompt Engineering, KI-gestützte Workflows, digitale Transformation in der Architektur.
+        </div>
+        <div class="edu-in-progress">
+          <div class="edu-dot"></div>
+          <span data-de="In Ausbildung" data-es="En curso">In Ausbildung</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ KOMPETENZEN ═══ -->
+<section id="kompetenzen">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eye" data-de="Fachliche Kenntnisse" data-es="Conocimientos Técnicos">Fachliche Kenntnisse</div>
+        <h2 class="sec-h2" data-de="Kompetenzen" data-es="Competencias">Kompetenzen</h2>
+      </div>
+    </div>
+    <div class="sk-grid">
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="10" width="22" height="14"/><path d="M2 10l11-8 11 8"/><rect x="7" y="16" width="5" height="8"/><rect x="14" y="14" width="4" height="4"/></svg></div>
+        <div class="sk-name" data-de="Krankenhausbau" data-es="Hospitales">Krankenhausbau</div>
+        <div class="sk-desc" data-de="3 Klinikprojekte in Baden-Württemberg. Wettbewerb, LP 1–4, Ausführung. Psychiatrie, Universitätsklinik, Ambulanz." data-es="3 proyectos hospitalarios en Baden-Württemberg. Concurso, LP 1–4, ejecución. Psiquiatría, hospital universitario, ambulatorio.">3 Klinikprojekte in BW. Wettbewerb, LP 1–4, Ausführung.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="95"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="22" height="22"/><line x1="2" y1="10" x2="24" y2="10"/><line x1="2" y1="18" x2="24" y2="18"/><line x1="10" y1="2" x2="10" y2="24"/></svg></div>
+        <div class="sk-name" data-de="LP 1–8 / HOAI" data-es="LP 1–8 / HOAI">LP 1–8 / HOAI</div>
+        <div class="sk-desc" data-de="Von Konzept bis Objektbetreuung. Vollständige Leistungsphasen in eigenverantwortlichen Projekten." data-es="Del concepto a la gestión post-obra. Fases completas en proyectos de responsabilidad propia.">Von Konzept bis Objektbetreuung. Vollständige Leistungsphasen.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="95"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="9"/><polyline points="13,5 13,13 18,13"/></svg></div>
+        <div class="sk-name" data-de="Projektmanagement" data-es="Gestión de Proyectos">Projektmanagement</div>
+        <div class="sk-desc" data-de="MBA-basiert. Budget, Termine, Risikoanalyse, Teamführung in DE/EN/ES." data-es="Basado en MBA. Presupuesto, plazos, análisis de riesgos, liderazgo en DE/EN/ES.">MBA-basiert. Budget, Termine, Risikoanalyse.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="90"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="10" height="10"/><rect x="14" y="2" width="10" height="10"/><rect x="2" y="14" width="10" height="10"/><rect x="14" y="14" width="10" height="10"/></svg></div>
+        <div class="sk-name" data-de="BIM / CAD" data-es="BIM / CAD">BIM / CAD</div>
+        <div class="sk-desc">Revit · ArchiCAD · AutoCAD · Rhino · SketchUp</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="83"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="10"/><path d="M3 13h20M13 3c-3 3-4 6-4 10s1 7 4 10M13 3c3 3 4 6 4 10s-1 7-4 10"/></svg></div>
+        <div class="sk-name" data-de="4 Sprachen" data-es="4 Idiomas">4 Sprachen</div>
+        <div class="sk-desc" data-de="Español (nativ) · Englisch C1 · Italienisch C1 · Deutsch B2" data-es="Español (nativo) · Inglés C1 · Italiano C1 · Alemán B2">Español nativ · EN C1 · IT C1 · DE B2</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="100"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2l2 5.5 6 .5-4.5 4 1.5 6L13 15l-5 3 1.5-6L5 8l6-.5z"/></svg></div>
+        <div class="sk-name" data-de="Wettbewerbe" data-es="Concursos">Wettbewerbe</div>
+        <div class="sk-desc" data-de="3 Preise. Konzept, Visualisierung, Präsentation auf internationalem Niveau." data-es="3 premios. Concepto, visualización y presentación a nivel internacional.">3 Preise. Konzept, Visualisierung, internationale Präsentation.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="88"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 23V13L13 5l10 8v10"/><rect x="8" y="15" width="10" height="8"/><line x1="13" y1="5" x2="13" y2="10"/></svg></div>
+        <div class="sk-name" data-de="Soziale Architektur" data-es="Arquitectura Social">Soziale Architektur</div>
+        <div class="sk-desc" data-de="Zig Zag Park, Bogotá — Archdaily, Azure, Bienal 2019." data-es="Zig Zag Park, Bogotá — Archdaily, Azure, Bienal 2019.">Zig Zag Park, Bogotá — Archdaily, Azure, Bienal 2019.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="80"></div></div>
+      </div>
+      <div class="sk-cell">
+        <div class="sk-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="22" height="16" rx="1"/><path d="M2 12h22"/><path d="M9 20v3M17 20v3M6 23h14"/><path d="M8 8h2M12 8h2M16 8h2M8 16h10"/></svg></div>
+        <div class="sk-name" data-de="KI &amp; Prompt Engineering" data-es="IA &amp; Prompt Engineering">KI &amp; Prompt Engineering</div>
+        <div class="sk-desc" data-de="Anthropic-Ausbildung (laufend). KI-gestützte Workflows in Architektur und Projektmanagement." data-es="Formación Anthropic (en curso). Flujos de trabajo asistidos por IA en arquitectura y gestión de proyectos.">Anthropic-Ausbildung (laufend). KI-gestützte Workflows.</div>
+        <div class="sk-bar"><div class="sk-fill" data-w="65"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ KONTAKT ═══ -->
+<section id="kontakt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eye" data-de="In Kontakt treten" data-es="Ponerse en Contacto">In Kontakt treten</div>
+        <h2 class="sec-h2" data-de="Kontakt" data-es="Contacto">Kontakt</h2>
+      </div>
+    </div>
+    <div class="ct-grid">
+      <div class="ct-panel">
+        <div class="ct-item">
+          <div class="ct-ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 1C5 1 3 3 3 5.5c0 3.5 4.5 8.5 4.5 8.5S12 9 12 5.5C12 3 10 1 7.5 1zm0 6a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg></div>
+          <div><div class="ct-lbl" data-de="Standort" data-es="Ubicación">Standort</div><div class="ct-val" data-de="Stuttgart, Deutschland — offen für Bogotá, Colombia" data-es="Stuttgart, Alemania — disponible para Bogotá, Colombia">Stuttgart, Deutschland — offen für Bogotá, Colombia</div></div>
+        </div>
+        <div class="ct-item">
+          <div class="ct-ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="13" height="9" rx="1"/><path d="M1 5l6.5 4L14 5"/></svg></div>
+          <div><div class="ct-lbl">E-Mail</div><div class="ct-val"><a href="/cdn-cgi/l/email-protection#a1f8cecbc9c0cfd5c98fc5c0d7c8c58fc6cecfdbc0cdc4dbe1c6ccc0c8cd8fc2cecc"><span class="__cf_email__" data-cfemail="6c350306040d02180442080d1a0508420b0302160d0009162c0b010d0500420f0301">[email&#160;protected]</span></a></div></div>
+        </div>
+        <div class="ct-item">
+          <div class="ct-ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 1h2l1.5 4-1.5 1.5a9.5 9.5 0 004.5 4.5L10.5 9.5l4 1.5v2A1.5 1.5 0 0113 14.5C6 14.5.5 9 .5 2A1.5 1.5 0 012.5 1z"/></svg></div>
+          <div><div class="ct-lbl" data-de="Telefon" data-es="Teléfono">Telefon</div><div class="ct-val">+49 151 5526 1811</div></div>
+        </div>
+        <div class="ct-item">
+          <div class="ct-ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="13" height="13" rx="2"/><path d="M5 6v5M5 4v.5M7 11V8c0-1 .5-2 2-2h0v5"/></svg></div>
+          <div><div class="ct-lbl">LinkedIn</div><div class="ct-val"><a href="https://linkedin.com/in/david-gonzalez-999642116" target="_blank">linkedin.com/in/david-gonzalez-999642116</a></div></div>
+        </div>
+        <div class="ct-mkt">
+          <span class="ct-m on" data-de="Stuttgart verfügbar" data-es="Stuttgart disponible">Stuttgart verfügbar</span>
+          <span class="ct-m" data-de="Bogotá verfügbar" data-es="Bogotá disponible">Bogotá verfügbar</span>
+        </div>
+        <div class="ct-btns">
+          <a id="cv-download" href="lebenslauf-de.pdf" download="Lebenslauf_David_Gonzalez.pdf"
+             class="fi" data-de="Lebenslauf PDF" data-es="Hoja de Vida PDF">Lebenslauf PDF</a>
+          <button onclick="downloadPortfolio()" class="gh" id="portfolio-dl-btn"
+             data-de="Portfolio PDF" data-es="Portafolio PDF"
+             style="font-family:inherit;cursor:pointer;">Portfolio PDF</button>
+        </div>
+      </div>
+      <div class="ct-panel">
+        <span class="fl" data-de="Nachricht senden" data-es="Enviar mensaje">Nachricht senden</span>
+        <input type="text" placeholder="Name / Unternehmen">
+        <input type="email" placeholder="E-Mail">
+        <textarea placeholder="Nachricht / Mensaje…"></textarea>
+        <a href="#" class="fi2" data-de="Senden" data-es="Enviar">Senden</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="fl2" data-de="© 2026 David González — Architekt &amp; Projektmanager" data-es="© 2026 David González — Arquitecto &amp; Gerente de Proyectos">© 2026 David González — Architekt &amp; Projektmanager</div>
+  <div class="fl2">Stuttgart · Bogotá · <span data-de="LP 1–8 · MBA · 3 Preise · 6 Projekte" data-es="LP 1–8 · MBA · 3 Premios · 6 Proyectos">LP 1–8 · MBA · 3 Preise · 6 Projekte</span></div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ── HERO CARD — scroll trigger ── */
+const heroCard = document.getElementById('heroCard');
+const heroWrap = document.getElementById('heroWrap');
+if (heroCard && heroWrap) {
+  const onScroll = () => {
+    const threshold = heroWrap.offsetHeight * 0.12;
+    if (window.scrollY > threshold) {
+      heroCard.classList.add('visible');
+    } else {
+      heroCard.classList.remove('visible');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+/* ── SKILL BARS ── */
+const fills = document.querySelectorAll('.sk-fill');
+const skObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.style.width = e.target.dataset.w + '%'; });
+}, { threshold: .3 });
+fills.forEach(f => skObs.observe(f));
+
+/* ── ENTRANCE ANIMATIONS ── */
+const anims = document.querySelectorAll('.proj-block, .tl-row, .edu-card, .sk-cell');
+const aObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; }
+  });
+}, { threshold: .06 });
+anims.forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(14px)';
+  el.style.transition = `opacity .5s ease ${(i % 6) * .05}s, transform .5s ease ${(i % 6) * .05}s`;
+  aObs.observe(el);
+});
+
+/* ── LANGUAGE SWITCHER ── */
+let lang = 'de';
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.getElementById('btnDE').classList.toggle('on', l === 'de');
+  document.getElementById('btnES').classList.toggle('on', l === 'es');
+  document.querySelectorAll('[data-de],[data-es]').forEach(el => {
+    const val = el.getAttribute('data-' + l);
+    if (val === null) return;
+    if (el.tagName === 'INPUT') { el.placeholder = val; return; }
+    if (el.tagName === 'TEXTAREA') { el.placeholder = val; return; }
+    val.includes('<') ? (el.innerHTML = val) : (el.textContent = val);
+  });
+  document.title = l === 'de'
+    ? 'David González — Architekt · Stuttgart'
+    : 'David González — Arquitecto · Stuttgart';
+}
+
+/* ── SMOOTH SCROLL ── */
+document.querySelector('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) { e.preventDefault(); document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* ── LIGHTBOX ── */
+let lbSlots = [], lbIdx = 0;
+
+function lbBuild() {
+  lbSlots = Array.from(document.querySelectorAll('.img-slot'));
+  lbSlots.forEach((slot, i) => {
+    slot.style.cursor = 'zoom-in';
+    slot.addEventListener('click', () => lbOpen(i));
+  });
+}
+
+function lbOpen(i) {
+  lbIdx = i;
+  lbShow();
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function lbClose() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbStep(dir) {
+  lbIdx = (lbIdx + dir + lbSlots.length) % lbSlots.length;
+  lbShow();
+}
+
+function lbShow() {
+  const slot = lbSlots[lbIdx];
+  const l = lang || 'de';
+
+  const realImg = slot.querySelector('img.slot-img');
+  const lbImg = document.getElementById('lb-img');
+  const lbPh  = document.getElementById('lb-img-ph');
+  if (realImg && realImg.src) {
+    lbImg.src = realImg.src;
+    lbImg.alt = realImg.alt || '';
+    lbImg.style.display = 'block';
+    lbPh.style.display  = 'none';
+  } else {
+    const ph = slot.querySelector('.img-ph');
+    lbPh.innerHTML = ph ? ph.innerHTML : '';
+    lbImg.style.display = 'none';
+    lbPh.style.display  = 'flex';
+  }
+
+  const label = slot.getAttribute('data-lb-label-' + l)
+    || slot.querySelector('.cap-label')?.textContent || '';
+  const raw = slot.getAttribute('data-lb-txt-' + l)
+    || slot.querySelector('.cap-txt')?.getAttribute('data-' + l)
+    || slot.querySelector('.cap-txt')?.textContent || '';
+
+  document.getElementById('lb-cap-label').textContent = label;
+
+  // Render as bullet list if text contains ' · '
+  const capEl = document.getElementById('lb-cap-txt');
+  if (raw.includes(' · ')) {
+    const parts = raw.split(' · ').map(s => s.trim()).filter(Boolean);
+    // First part may be "Projekte:" or "Proyectos realizados:" — use as intro
+    let intro = '', items = parts;
+    if (parts[0].endsWith(':')) { intro = parts[0]; items = parts.slice(1); }
+    let html = intro ? `<div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:10px;letter-spacing:.1em;text-transform:uppercase;">${intro}</div>` : '';
+    html += '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+    capEl.innerHTML = html;
+  } else {
+    capEl.textContent = raw;
+  }
+
+  document.getElementById('lb-counter').textContent = (lbIdx + 1) + ' / ' + lbSlots.length;
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowRight') lbStep(1);
+  if (e.key === 'ArrowLeft')  lbStep(-1);
+});
+
+document.getElementById('lb').addEventListener('click', e => {
+  if (e.target === document.getElementById('lb')) lbClose();
+});
+
+// Patch setLang to refresh open lightbox
+const _sl = setLang;
+window.setLang = function(l) { _sl(l); if (document.getElementById('lb').classList.contains('open')) lbShow(); };
+
+lbBuild();
+</script>
+<!-- ═══ LIGHTBOX ═══ -->
+<div id="lb" role="dialog" aria-modal="true">
+  <button id="lb-close" onclick="lbClose()" aria-label="Schließen">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="16" y2="16"/><line x1="16" y1="2" x2="2" y2="16"/></svg>
+  </button>
+  <div id="lb-nav">
+    <button class="lb-arr" onclick="lbStep(-1)" aria-label="Zurück">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <button class="lb-arr" onclick="lbStep(1)" aria-label="Weiter">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+  </div>
+  <div id="lb-img-ph"><svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="1"><rect x="8" y="18" width="64" height="44"/><path d="M8 18L40 4l32 14"/><circle cx="28" cy="36" r="6"/><path d="M8 50l18-14 14 12 10-8 22 20"/></svg></div>
+  <img id="lb-img" src="" alt="" style="display:none;">
+  <div id="lb-caption">
+    <div id="lb-cap-label"></div>
+    <div id="lb-cap-txt"></div>
+  </div>
+  <div id="lb-counter"></div>
+</div>
+
+<style>
+/* Lightbox bullet list rendering */
+#lb-cap-txt ul{list-style:none;margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+#lb-cap-txt ul li{
+  font-size:.72rem;padding:3px 10px;
+  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.75);
+}
+#lb-cap-txt ul li::before{content:'— ';color:var(--or);}
+</style>
+
+
+<!-- html2pdf for dynamic portfolio PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPortfolio() {
+  const l = (typeof lang !== 'undefined') ? lang : 'de';
+  const btn = document.getElementById('portfolio-dl-btn');
+  const origTxt = btn ? btn.textContent : '';
+  if (btn) btn.textContent = l === 'de' ? 'Wird erstellt...' : 'Generando...';
+
+  // Elements to include in PDF
+  const el = document.createElement('div');
+  el.style.cssText = 'font-family:Helvetica,Arial,sans-serif;color:#111;background:#fff;padding:0;';
+
+  // Clone relevant sections
+  const sections = ['#hero .hero-card', '#projekte', '#erfahrung', '#bildung', '#kompetenzen'];
+  sections.forEach(sel => {
+    const node = document.querySelector(sel);
+    if (node) {
+      const clone = node.cloneNode(true);
+      // Remove interactive elements
+      clone.querySelectorAll('button, input, textarea, .hero-scroll-hint, .img-cap').forEach(e => e.remove());
+      // Show all lang content for chosen language
+      clone.querySelectorAll('[data-' + l + ']').forEach(e => {
+        const v = e.getAttribute('data-' + l);
+        if (v) { v.includes('<') ? (e.innerHTML = v) : (e.textContent = v); }
+      });
+      el.appendChild(clone);
+    }
+  });
+
+  const fname = l === 'de'
+    ? 'Portfolio_David_Gonzalez_DE.pdf'
+    : 'Portfolio_David_Gonzalez_ES.pdf';
+
+  html2pdf().set({
+    margin:        [10, 10, 10, 10],
+    filename:      fname,
+    image:         { type: 'jpeg', quality: 0.92 },
+    html2canvas:   { scale: 1.5, useCORS: true, logging: false },
+    jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:     { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(el).save().then(() => {
+    if (btn) btn.textContent = origTxt;
+  });
+}
+
+// Update CV download link on language change
+const _origSetLang2 = window.setLang;
+window.setLang = function(l) {
+  _origSetLang2(l);
+  const cvLink = document.getElementById('cv-download');
+  if (cvLink) {
+    if (l === 'es') {
+      cvLink.href     = 'hoja-de-vida-es.pdf';
+      cvLink.download = 'HojaDeVida_David_Gonzalez.pdf';
+    } else {
+      cvLink.href     = 'lebenslauf-de.pdf';
+      cvLink.download = 'Lebenslauf_David_Gonzalez.pdf';
+    }
+  }
+  if (window.lbShow && document.getElementById('lb').classList.contains('open')) lbShow();
+};
+</script>
+</body>
+</html>
